@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 
 export const runtime = 'nodejs';
 
@@ -45,7 +46,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
         const { title, model, messages } = body;
 
         // Start a transaction to update session and messages
-        const session = await prisma.$transaction(async (tx) => {
+        const session = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
             // Update session
             const updatedSession = await tx.chatSession.update({
                 where: { id },
