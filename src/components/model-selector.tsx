@@ -42,10 +42,10 @@ export function ModelSelector({ selectedModel, onModelChange }: ModelSelectorPro
     }, []);
 
     return (
-        <div className="flex items-center gap-2">
-            <Cpu className="h-4 w-4 text-slate-500" />
+        <div className="flex items-center gap-1 md:gap-2">
+            <Cpu className="h-3 w-3 md:h-4 md:w-4 text-slate-500" />
             <Select value={selectedModel} onValueChange={onModelChange} disabled={loading}>
-                <SelectTrigger className="w-[200px] h-9 bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700">
+                <SelectTrigger className="w-[140px] sm:w-[180px] md:w-[200px] h-8 md:h-9 bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-xs md:text-sm">
                     <SelectValue placeholder={loading ? 'Loading...' : 'Select model'} />
                 </SelectTrigger>
                 <SelectContent>

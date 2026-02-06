@@ -12,6 +12,7 @@ import { useNotificationStore } from '@/store/notification.store';
 
 export default function HomePage() {
     const [chatKey, setChatKey] = useState(0);
+    const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
     const { addSession, currentSessionId, loadSessions } = useChatStore();
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -76,9 +77,17 @@ export default function HomePage() {
     return (
         <div className="flex flex-col h-dvh overflow-hidden bg-background">
             <div className="flex flex-1 relative overflow-hidden">
-                <ChatSidebar onNewChat={handleNewChat} />
+                <ChatSidebar
+                    onNewChat={handleNewChat}
+                    isMobileOpen={isMobileSidebarOpen}
+                    onMobileToggle={setIsMobileSidebarOpen}
+                />
                 <div className="flex-1 overflow-hidden h-full">
-                    <ChatInterface key={chatKey} sessionId={currentSessionId} />
+                    <ChatInterface
+                        key={chatKey}
+                        sessionId={currentSessionId}
+                        onMobileSidebarToggle={() => setIsMobileSidebarOpen(true)}
+                    />
                 </div>
             </div>
         </div>

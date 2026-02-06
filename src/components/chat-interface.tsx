@@ -1,6 +1,6 @@
 'use client';
 
-import { Send, Bot, User, Loader2 } from 'lucide-react';
+import { Send, Bot, User, Loader2, Menu } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -20,9 +20,10 @@ import { useStreamChat } from '@/hooks/useStreamChat';
 
 interface ChatInterfaceProps {
     sessionId: string | null;
+    onMobileSidebarToggle?: () => void;
 }
 
-export function ChatInterface({ sessionId }: ChatInterfaceProps) {
+export function ChatInterface({ sessionId, onMobileSidebarToggle }: ChatInterfaceProps) {
     const [selectedModel, setSelectedModel] = useState('deepseek-r1:8b');
     const [attachedFiles, setAttachedFiles] = useState<Array<{ file: File, base64?: string }>>([]);
     const [inputText, setInputText] = useState('');
@@ -140,13 +141,21 @@ export function ChatInterface({ sessionId }: ChatInterfaceProps) {
                 animate={{ opacity: 1, y: 0 }}
                 className="border-b border-slate-200 bg-white/80 backdrop-blur-lg dark:border-slate-800 dark:bg-slate-900/80"
             >
-                <div className="container mx-auto flex h-16 items-center justify-between px-6">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-purple-600">
-                            <Bot className="h-6 w-6 text-white" />
+                <div className="container mx-auto flex h-16 items-center justify-between px-3 md:px-6">
+                    <div className="flex items-center gap-2 md:gap-3">
+                        {/* Mobile hamburger menu */}
+                        <button
+                            onClick={onMobileSidebarToggle}
+                            className="lg:hidden p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+                            aria-label="Toggle menu"
+                        >
+                            <Menu className="h-5 w-5 text-slate-700 dark:text-slate-300" />
+                        </button>
+                        <div className="flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-purple-600">
+                            <Bot className="h-4 w-4 md:h-6 md:w-6 text-white" />
                         </div>
-                        <div>
-                            <h1 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+                        <div className="hidden sm:block">
+                            <h1 className="text-base md:text-lg font-semibold text-slate-900 dark:text-slate-100">
                                 VuTruong Chat
                             </h1>
                             <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -162,8 +171,8 @@ export function ChatInterface({ sessionId }: ChatInterfaceProps) {
             </motion.header>
 
             {/* Messages Area */}
-            <ScrollArea className="flex-1 min-h-0 px-4 py-6">
-                <div className="container mx-auto max-w-4xl space-y-6">
+            <ScrollArea className="flex-1 min-h-0 px-2 py-4 md:px-4 md:py-6">
+                <div className="container mx-auto max-w-3xl md:max-w-4xl space-y-4 md:space-y-6">
                     <AnimatePresence mode="popLayout">
                         {messages.length === 0 && (
                             <motion.div
@@ -195,15 +204,15 @@ export function ChatInterface({ sessionId }: ChatInterfaceProps) {
                                     }`}
                             >
                                 {message.role === 'assistant' && (
-                                    <Avatar className="h-10 w-10 border-2 border-violet-500">
+                                    <Avatar className="h-8 w-8 md:h-10 md:w-10 border-2 border-violet-500">
                                         <AvatarFallback className="bg-gradient-to-br from-violet-500 to-purple-600">
-                                            <Bot className="h-5 w-5 text-white" />
+                                            <Bot className="h-4 w-4 md:h-5 md:w-5 text-white" />
                                         </AvatarFallback>
                                     </Avatar>
                                 )}
 
                                 <Card
-                                    className={`max-w-[80%] p-4 ${message.role === 'user'
+                                    className={`max-w-[90%] md:max-w-[80%] p-3 md:p-4 ${message.role === 'user'
                                         ? 'bg-gradient-to-br from-violet-500 to-purple-600 text-white'
                                         : 'bg-white dark:bg-slate-800'
                                         }`}
@@ -221,9 +230,9 @@ export function ChatInterface({ sessionId }: ChatInterfaceProps) {
                                 </Card>
 
                                 {message.role === 'user' && (
-                                    <Avatar className="h-10 w-10 border-2 border-slate-300 dark:border-slate-600">
+                                    <Avatar className="h-8 w-8 md:h-10 md:w-10 border-2 border-slate-300 dark:border-slate-600">
                                         <AvatarFallback className="bg-gradient-to-br from-slate-600 to-slate-700">
-                                            <User className="h-5 w-5 text-white" />
+                                            <User className="h-4 w-4 md:h-5 md:w-5 text-white" />
                                         </AvatarFallback>
                                     </Avatar>
                                 )}
@@ -264,7 +273,7 @@ export function ChatInterface({ sessionId }: ChatInterfaceProps) {
                 animate={{ opacity: 1, y: 0 }}
                 className="border-t border-slate-200 bg-white/80 backdrop-blur-lg dark:border-slate-800 dark:bg-slate-900/80"
             >
-                <div className="container mx-auto max-w-4xl p-4 space-y-3">
+                <div className="container mx-auto max-w-3xl md:max-w-4xl p-3 md:p-4 space-y-3">
                     {/* File Upload */}
                     <FileUpload onFilesChange={setAttachedFiles} />
 
@@ -275,14 +284,14 @@ export function ChatInterface({ sessionId }: ChatInterfaceProps) {
                             onChange={(e) => setInputText(e.target.value)}
                             onKeyDown={handleKeyDown}
                             placeholder="Ask me anything..."
-                            className="min-h-[60px] max-h-[200px] resize-none rounded-xl border-slate-300 bg-white focus:border-violet-500 focus:ring-violet-500 dark:border-slate-700 dark:bg-slate-800"
+                            className="min-h-[50px] md:min-h-[60px] max-h-[200px] resize-none rounded-xl border-slate-300 bg-white focus:border-violet-500 focus:ring-violet-500 dark:border-slate-700 dark:bg-slate-800 text-sm md:text-base"
                             disabled={isLoading}
                         />
                         <Button
                             type="submit"
                             size="icon"
                             disabled={isLoading || !inputText.trim()}
-                            className="h-[60px] w-[60px] shrink-0 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700"
+                            className="h-[50px] w-[50px] md:h-[60px] md:w-[60px] shrink-0 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 hover:from-violet-600 hover:to-purple-700"
                         >
                             {isLoading ? (
                                 <Loader2 className="h-5 w-5 animate-spin" />
